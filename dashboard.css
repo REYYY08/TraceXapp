@@ -17,31 +17,38 @@ body {
 
 /* Header */
 header {
-  background: #1565c0;
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 18px;
-  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);
+  background-color: #1565c0;
+  color: white;
+  padding: 1rem 1.2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; /* allow wrapping */
+  gap: 0.5rem;
 }
 
 header h1 {
   font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1 1 100%;
+  text-align: center;
 }
 
 header .user {
-  font-size: 0.95rem;
+ font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .hamburger {
+  font-size: 1.5rem;
   background: none;
   border: none;
   color: white;
-  font-size: 1.5rem;
-  display: none;
   cursor: pointer;
 }
 
@@ -284,4 +291,21 @@ canvas {
   border-radius: 50%;
   display: inline-block;
   margin-left: 0.4rem;
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  header h1 {
+    text-align: left;
+    flex: 1 1 auto;
+  }
+
+  header .user {
+    align-self: flex-end;
+  }
 }
