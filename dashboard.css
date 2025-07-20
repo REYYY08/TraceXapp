@@ -235,3 +235,53 @@ canvas {
     width: 100%;
   }
 }
+
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1565c0;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+  gap: 0.5rem;
+}
+
+.header .menu-toggle {
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+}
+
+.header .welcome {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.header .welcome strong {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-right: 0.3rem;
+}
+
+.header .profile-icon {
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 0.4rem;
+}
