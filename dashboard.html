@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraceX Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+  </head>
+
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h2>TraceX</h2>
+        <nav>
+          <a href="#" class="active" id="dashboardTab"
+            ><i data-lucide="layout-dashboard"></i> Dashboard</a
+          >
+          <a href="#" id="scannerTab"
+            ><i data-lucide="scan-line"></i> Scanner</a
+          >
+          <a href="#"><i data-lucide="qrcode"></i> Generate QR</a>
+          <a href="#"><i data-lucide="settings"></i> Settings</a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header>
+          <h1>Welcome, <span id="userName">User</span></h1>
+          <div class="user">
+            <i data-lucide="user"></i>
+            <span id="userDisplay">John Doe</span>
+          </div>
+        </header>
+
+        <!-- Editable User Info -->
+        <section class="user-info">
+          <h2>User Information</h2>
+          <form id="userInfoForm">
+            <div class="info-field">
+              <label for="editName"><strong>Name:</strong></label>
+              <input type="text" id="editName" value="" />
+            </div>
+            <div class="info-field">
+              <label for="editEmail"><strong>Email:</strong></label>
+              <input type="email" id="editEmail" value="" />
+            </div>
+            <div class="info-field">
+              <label for="editRole"><strong>Role:</strong></label>
+              <input type="text" id="editRole" value="" />
+            </div>
+            <div class="info-field">
+              <label for="editLocation"><strong>Location:</strong></label>
+              <input
+                type="text"
+                id="editLocation"
+                placeholder="e.g. Ilocos Norte, PH"
+              />
+            </div>
+            <button type="submit">Save</button>
+          </form>
+        </section>
+
+        <!-- Planting & Harvest Calendar -->
+        <section class="planting-harvest">
+          <h2>Planting & Harvest Calendar</h2>
+          <div class="calendar-group">
+            <label for="plantingDate">Planting Date:</label>
+            <input type="date" id="plantingDate" required />
+          </div>
+          <div class="calendar-group">
+            <label for="harvestDate">Harvest Date:</label>
+            <input type="date" id="harvestDate" required />
+          </div>
+          <div class="calendar-group">
+            <label for="cropInput">Crop:</label>
+            <input
+              list="cropOptions"
+              id="cropInput"
+              placeholder="Select or type crop"
+              required
+            />
+            <datalist id="cropOptions">
+              <option value="Corn"></option>
+              <option value="Tomato"></option>
+              <option value="Rice"></option>
+              <option value="Potato"></option>
+              <option value="Carrot"></option>
+              <option value="Cabbage"></option>
+              <option value="Lettuce"></option>
+            </datalist>
+          </div>
+          <button id="generateQRBtn" disabled>Generate QR Code</button>
+        </section>
+
+        <!-- QR Code Canvas -->
+        <canvas id="qrCanvas"></canvas>
+        <div id="qrMessage" class="qr-message"></div>
+
+        <!-- Download / Print QR -->
+        <div class="qr-actions">
+          <button id="downloadQRBtn" disabled>Download QR</button>
+          <button id="printQRBtn" disabled>Print QR</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- QR Scanner Section -->
+    <section id="scannerSection" style="display: none">
+      <h2>QR Code Scanner</h2>
+      <video
+        id="scannerVideo"
+        style="width: 300px; margin-top: 10px"
+        autoplay
+      ></video>
+      <div id="reader" style="width: 300px"></div>
+      <p>
+        <strong>Result:</strong>
+        <span id="scanResult">Waiting for scan...</span>
+      </p>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+      lucide.createIcons();
+
+      // Elements
+      const plantingInput = document.getElementById("plantingDate");
+      const harvestInput = document.getElementById("harvestDate");
+      const cropInput = document.getElementById("cropInput");
+      const generateBtn = document.getElementById("generateQRBtn");
+      const canvas = document.getElementById("qrCanvas");
+      const msg = document.getElementById("qrMessage");
+      const downloadBtn = document.getElementById("downloadQRBtn");
+      const printBtn = document.getElementById("printQRBtn");
+
+      const nameInput = document.getElementById("editName");
+      const emailInput = document.getElementById("editEmail");
+      const roleInput = document.getElementById("editRole");
+      const locationInput = document.getElementById("editLocation");
+
+      // Load stored user info
+      window.addEventListener("DOMContentLoaded", () => {
+        const name = localStorage.getItem("username") || "User";
+        const email = localStorage.getItem("email") || "";
+        const role = localStorage.getItem("role") || "";
+        const location = localStorage.getItem("location") || "";
+
+        nameInput.value = name;
+        emailInput.value = email;
+        roleInput.value = role;
+        locationInput.value = location;
+
+        document.getElementById("userName").textContent = name;
+        document.getElementById("userDisplay").textContent = name;
+      });
+
+      // Save edited user info
+      document
+        .getElementById("userInfoForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const name = nameInput.value.trim();
+          const email = emailInput.value.trim();
+          const role = roleInput.value.trim();
+          const location = locationInput.value.trim();
+
+          localStorage.setItem("username", name);
+          localStorage.setItem("email", email);
+          localStorage.setItem("role", role);
+          localStorage.setItem("location", location);
+
+          document.getElementById("userName").textContent = name;
+          document.getElementById("userDisplay").textContent = name;
+
+          alert("✅ Profile updated!");
+        });
+
+      // Input check
+      function checkInputs() {
+        if (
+          plantingInput.value &&
+          harvestInput.value &&
+          cropInput.value.trim() !== ""
+        ) {
+          generateBtn.disabled = false;
+        } else {
+          generateBtn.disabled = true;
+        }
+      }
+
+      plantingInput.addEventListener("input", checkInputs);
+      harvestInput.addEventListener("input", checkInputs);
+      cropInput.addEventListener("input", checkInputs);
+
+      // Generate QR
+      generateBtn.addEventListener("click", () => {
+        const name = localStorage.getItem("username") || "User";
+        const email = localStorage.getItem("email") || "N/A";
+        const role = localStorage.getItem("role") || "N/A";
+        const location = localStorage.getItem("location") || "N/A";
+
+        const traceId = "TRX-" + Date.now();
+        const timestamp = new Date().toLocaleString();
+
+        const crop = cropInput.value;
+        const planting = plantingInput.value;
+        const harvest = harvestInput.value;
+
+        const qrData = {
+          traceId,
+          timestamp,
+          name,
+          email,
+          role,
+          location,
+          crop,
+          planting,
+          harvest,
+        };
+
+        // Save to localStorage list
+        let qrList = JSON.parse(localStorage.getItem("qrList") || "[]");
+        qrList.push(qrData);
+        localStorage.setItem("qrList", JSON.stringify(qrList));
+
+        const dataToEncode =
+          `--- TraceX Farmer Profile ---\n` +
+          `Trace ID: ${traceId}\nTimestamp: ${timestamp}\n` +
+          `Name: ${name}\nEmail: ${email}\nRole: ${role}\nLocation: ${location}\n\n` +
+          `--- Crop Information ---\n` +
+          `Crop: ${crop}\nPlanting Date: ${planting}\nHarvest Date: ${harvest}`;
+
+        QRCode.toCanvas(
+          canvas,
+          dataToEncode,
+          { width: 200, margin: 2 },
+          (error) => {
+            if (error) {
+              msg.textContent = "⚠ Failed to generate QR Code.";
+              msg.style.color = "red";
+            } else {
+              msg.textContent = "✅ QR Code generated!";
+              msg.style.color = "green";
+              downloadBtn.disabled = false;
+              printBtn.disabled = false;
+              updateQRListUI(); // refresh saved list
+            }
+            msg.style.display = "block";
+            setTimeout(() => (msg.style.display = "none"), 3000);
+          }
+        );
+      });
+
+      // Download QR
+      downloadBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.download = "TraceX-QRCode.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      // Print QR
+      printBtn.addEventListener("click", () => {
+        const win = window.open();
+        win.document.write(
+          '<img src="' +
+            canvas.toDataURL() +
+            '" onload="window.print();window.close()" />'
+        );
+        win.document.close();
+      });
+
+      // Tab Switching
+      const scannerTab = document.getElementById("scannerTab");
+      const dashboardTab = document.getElementById("dashboardTab");
+      const scannerSection = document.getElementById("scannerSection");
+      const dashboardSections = document.querySelectorAll(
+        ".user-info, .planting-harvest, #qrCanvas, .qr-message, .qr-actions, header"
+      );
+
+      scannerTab.addEventListener("click", (e) => {
+        e.preventDefault();
+        dashboardSections.forEach(
+          (section) => (section.style.display = "none")
+        );
+        scannerSection.style.display = "block";
+        scannerTab.classList.add("active");
+        dashboardTab.classList.remove("active");
+        startScanner();
+      });
+
+      dashboardTab.addEventListener("click", (e) => {
+        e.preventDefault();
+        dashboardSections.forEach((section) => (section.style.display = ""));
+        scannerSection.style.display = "none";
+        dashboardTab.classList.add("active");
+        scannerTab.classList.remove("active");
+        stopScanner();
+      });
+
+      // Scanner Functions
+      let scannerStream = null;
+      const video = document.getElementById("scannerVideo");
+      const scanResult = document.getElementById("scanResult");
+
+      let html5QrCode;
+
+      function startScanner() {
+        const qrRegion = document.getElementById("reader");
+
+        html5QrCode = new Html5Qrcode("reader");
+        html5QrCode
+          .start(
+            { facingMode: "environment" },
+            {
+              fps: 10,
+              qrbox: 250,
+            },
+            (decodedText) => {
+              scanResult.textContent = decodedText;
+              html5QrCode.stop().catch(console.error);
+            },
+            (errorMessage) => {
+              // Optional: console.log(errorMessage);
+            }
+          )
+          .catch((err) => {
+            scanResult.textContent = "Camera start failed: " + err;
+          });
+      }
+
+      function stopScanner() {
+        if (html5QrCode) {
+          html5QrCode.stop().then(() => {
+            document.getElementById("reader").innerHTML = "";
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

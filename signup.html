@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - TraceX</title>
+    <link rel="stylesheet" href="signup.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="signup-container">
+      <form id="signupForm" class="signup-form">
+        <h2>Create Account</h2>
+        <div class="input-group">
+          <i data-lucide="user" class="icon"></i>
+          <input type="text" id="fullname" placeholder="Full Name" required />
+        </div>
+        <div class="input-group">
+          <i data-lucide="mail" class="icon"></i>
+          <input type="email" id="email" placeholder="Email Address" required />
+        </div>
+        <div class="input-group">
+          <i data-lucide="lock" class="icon"></i>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <button type="submit">Sign Up</button>
+        <p class="login-link">
+          Already a member? <a href="login.html">Log in</a>
+        </p>
+      </form>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const fullName = document.getElementById("fullname").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Store in localStorage (for demo purposes)
+          localStorage.setItem("username", fullName);
+          localStorage.setItem("email", email);
+
+          alert("✅ Account successfully created!");
+          window.location.href = "login.html";
+        });
+    </script>
+  </body>
+</html>
