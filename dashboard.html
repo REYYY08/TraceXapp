@@ -11,6 +11,12 @@
   </head>
 
   <body>
+    <header>
+      <button id="toggleSidebar" class="hamburger">☰</button>
+      <h1>Welcome to TraceX</h1>
+      <div class="user">👤 Active User</div>
+    </header>
+
     <div class="dashboard">
       <!-- Sidebar -->
       <aside class="sidebar">
@@ -35,12 +41,6 @@
             <i data-lucide="user"></i>
             <span id="userDisplay">John Doe</span>
           </div>
-        </header>
-
-        <header>
-          <button id="toggleSidebar" class="hamburger">☰</button>
-          <h1>Welcome to TraceX</h1>
-          <div class="user">👤 Active User</div>
         </header>
 
         <!-- Editable User Info -->
@@ -186,13 +186,6 @@
 
           alert("✅ Profile updated!");
         });
-
-      const toggleBtn = document.getElementById("toggleSidebar");
-      const sidebar = document.querySelector(".sidebar");
-
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("active");
-      });
 
       // Input check
       function checkInputs() {
@@ -355,6 +348,13 @@
           });
         }
       }
+
+      const toggleBtn = document.getElementById("toggleSidebar");
+      const sidebar = document.getElementById("sidebar");
+
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+      });
     </script>
   </body>
 </html>
