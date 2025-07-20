@@ -37,12 +37,6 @@ header h1 {
   text-align: center;
 }
 
-header .user {
- font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
 
 .hamburger {
   font-size: 1.5rem;
@@ -269,30 +263,6 @@ canvas {
   color: white;
 }
 
-.header .welcome {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.header .welcome strong {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-right: 0.3rem;
-}
-
-.header .profile-icon {
-  width: 20px;
-  height: 20px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 0.4rem;
-}
-
 @media (max-width: 480px) {
   header {
     flex-direction: column;
@@ -305,7 +275,4 @@ canvas {
     flex: 1 1 auto;
   }
 
-  header .user {
-    align-self: flex-end;
-  }
 }
