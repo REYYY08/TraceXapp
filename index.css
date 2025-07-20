@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Background */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optional faded background image */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("images/bg.jpg") no-repeat center center/cover;
+  opacity: 0.05;
+  z-index: 0;
+}
+
+/* Container */
+.login-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Card */
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 2rem;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(21, 101, 192, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1565c0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Input group */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f0f4f8;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.input-group:focus-within {
+  border-color: #90caf9;
+  background: #e3f2fd;
+}
+
+/* Lucide icon */
+.icon {
+  color: #1565c0;
+  margin-right: 0.8rem;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Input field */
+.input-group input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0d47a1;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.5rem 0;
+  caret-color: #1565c0;
+}
+
+.input-group input::placeholder {
+  color: #90a4ae;
+}
+
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  background: #1565c0;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 20px rgba(21, 101, 192, 0.3);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+  background: #0d47a1;
+  transform: translateY(-2px);
+}
+
+/* Signup link */
+.signup-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: #1565c0;
+  font-size: 0.9rem;
+}
+
+.signup-link a {
+  color: #1565c0;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem;
+  }
+  .card h2 {
+    font-size: 1.6rem;
+  }
+}
