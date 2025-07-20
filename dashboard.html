@@ -303,6 +303,28 @@
       toggleBtn.addEventListener("click", () => {
         sidebar.classList.toggle("active");
       });
+
+      // Close sidebar after clicking a link on mobile
+      const sidebarLinks = sidebar.querySelectorAll("a");
+      sidebarLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove("active");
+          }
+        });
+      });
+
+      // Optional: close on outside click
+      document.addEventListener("click", function (e) {
+        if (
+          window.innerWidth <= 768 &&
+          sidebar.classList.contains("active") &&
+          !sidebar.contains(e.target) &&
+          !toggleBtn.contains(e.target)
+        ) {
+          sidebar.classList.remove("active");
+        }
+      });
     </script>
   </body>
 </html>
