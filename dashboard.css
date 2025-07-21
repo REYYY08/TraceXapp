@@ -37,7 +37,6 @@ header h1 {
   text-align: center;
 }
 
-
 .hamburger {
   font-size: 1.5rem;
   background: none;
@@ -255,14 +254,6 @@ canvas {
   gap: 0.5rem;
 }
 
-.header .menu-toggle {
-  font-size: 1.5rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  color: white;
-}
-
 @media (max-width: 480px) {
   header {
     flex-direction: column;
@@ -274,5 +265,247 @@ canvas {
     text-align: left;
     flex: 1 1 auto;
   }
+}
 
+/* Sidebar overlay background for mobile */
+@media (max-width: 768px) {
+  body.sidebar-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 998;
+  }
+}
+
+/* Ensure QR scanner fits on small screens */
+#scannerSection video,
+#scannerSection #reader {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+/* Ensure canvas resizes responsively */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+/* Improved QR Scanner Layout */
+#scannerSection {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(21, 101, 192, 0.15);
+  display: none;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#scannerSection h2 {
+  color: #1565c0;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+#reader {
+  border: 2px dashed #90caf9;
+  border-radius: 12px;
+  padding: 1rem;
+  background-color: #e3f2fd;
+  margin: 1rem 0;
+}
+
+#scanResult {
+  font-size: 1rem;
+  color: #0d47a1;
+  background: #f0f4f8;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* Make video fully responsive */
+#scannerVideo {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  #scannerSection {
+    padding: 1rem;
+  }
+
+  #reader {
+    padding: 0.5rem;
+  }
+
+  #scanResult {
+    font-size: 0.95rem;
+  }
+}
+
+/* Scanner Section Styled Card */
+.scanner-card {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(21, 101, 192, 0.15);
+  display: none;
+}
+
+.scanner-card h2 {
+  color: #1565c0;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+#reader {
+  border: 2px dashed #90caf9;
+  border-radius: 12px;
+  padding: 1rem;
+  background-color: #e3f2fd;
+  margin: 1rem auto;
+  max-width: 320px;
+}
+
+#scanResult {
+  font-size: 1rem;
+  color: #0d47a1;
+  background: #f0f4f8;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+  .scanner-card {
+    padding: 1rem;
+  }
+
+  #reader {
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+
+  #scanResult {
+    font-size: 0.95rem;
+  }
+}
+
+#toggleScanBtn {
+  margin: 1rem 0;
+}
+
+/* History Table Styling */
+.history-table-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  border-radius: 12px;
+  border: 1px solid #bbdefb;
+  background: #f9f9f9;
+}
+
+#scanHistoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+#scanHistoryTable th,
+#scanHistoryTable td {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #0d47a1;
+}
+
+#scanHistoryTable th {
+  background: #e3f2fd;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#scanHistoryTable tr:hover {
+  background: #e1f5fe;
+}
+
+.history-table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+#scanHistoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.05);
+  font-size: 0.95rem;
+}
+
+#scanHistoryTable th,
+#scanHistoryTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+#scanHistoryTable th {
+  background: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.copyBtn {
+  padding: 0.25rem 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #90caf9;
+  color: #0d47a1;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copyBtn:hover {
+  background-color: #64b5f6;
+}
+
+.history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1rem;
+}
+
+#clearHistoryBtn {
+  background-color: #ef5350;
+}
+
+#clearHistoryBtn:hover {
+  background-color: #c62828;
+}
+
+#exportBtn {
+  background-color: #66bb6a;
+}
+
+#exportBtn:hover {
+  background-color: #2e7d32;
 }
