@@ -38,12 +38,15 @@ header h1 {
 }
 
 .hamburger {
-  font-size: 1.5rem;
+  font-size: 24px;
   background: none;
   border: none;
   color: white;
   cursor: pointer;
-  margin-right: auto; /* Ensures it aligns to the left */
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  display: inline-block;
 }
 
 /* Dashboard Layout */
@@ -509,4 +512,35 @@ canvas {
 
 #exportBtn:hover {
   background-color: #2e7d32;
+}
+
+.logout-btn {
+  margin-left: 1rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c62828;
+}
+.logout-btn {
+  margin-left: 1rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c62828;
 }
