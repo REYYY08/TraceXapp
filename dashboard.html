@@ -12,6 +12,7 @@
   <body>
     <header>
       <button id="toggleSidebar" class="hamburger">☰</button>
+      <div class="user"><span id="userName">User</span></div>
     </header>
 
     <div class="dashboard">
@@ -96,19 +97,41 @@
       </main>
     </div>
 
-    <!-- QR Scanner Section -->
-    <section id="scannerSection">
+    <section class="scanner-card" id="scannerSection">
       <h2>QR Code Scanner</h2>
-      <video
-        id="scannerVideo"
-        style="width: 300px; margin-top: 10px"
-        autoplay
-      ></video>
-      <div id="reader" style="width: 300px"></div>
+
+      <button id="toggleScanBtn">Start Scan</button>
+
+      <div id="reader"></div>
+
       <p>
         <strong>Result:</strong>
         <span id="scanResult">Waiting for scan...</span>
       </p>
+
+      <h3>📜 Scan History</h3>
+
+      <!-- History Controls -->
+      <div class="history-controls">
+        <button id="clearHistoryBtn">🗑️ Clear History</button>
+        <button id="exportBtn">📁 Export CSV</button>
+      </div>
+
+      <!-- History Table -->
+      <div class="history-table-wrapper">
+        <table id="scanHistoryTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Scanned Data</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- History rows will be injected here -->
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <!-- JavaScript -->
@@ -205,7 +228,21 @@
         qrList.push(qrData);
         localStorage.setItem("qrList", JSON.stringify(qrList));
 
-        const dataToEncode = `--- TraceX Farmer Profile ---\nTrace ID: ${traceId}\nTimestamp: ${timestamp}\nName: ${name}\nEmail: ${email}\nRole: ${role}\nLocation: ${location}\n\n--- Crop Information ---\nCrop: ${crop}\nPlanting Date: ${planting}\nHarvest Date: ${harvest}`;
+        const dataToEncode = `--- TraceX Farmer Profile ---
+
+Trace ID: ${traceId}
+Timestamp: ${timestamp}
+
+Name: ${name}
+Email: ${email}
+Role: ${role}
+Location: ${location}
+
+--- Crop Information ---
+
+Crop: ${crop}
+Planting Date: ${planting}
+Harvest Date: ${harvest}`;
 
         QRCode.toCanvas(canvas, dataToEncode, { width: 200 }, (error) => {
           if (error) {
@@ -261,15 +298,18 @@
         e.preventDefault();
         dashboardSections.forEach((section) => (section.style.display = ""));
         scannerSection.style.display = "none";
+        updateScanHistoryTable(); // ✅ Show history again when returning
         dashboardTab.classList.add("active");
         scannerTab.classList.remove("active");
         stopScanner();
       });
 
       let html5QrCode;
+      let isScanning = false;
+
+      const toggleScanBtn = document.getElementById("toggleScanBtn");
 
       function startScanner() {
-        const qrRegion = document.getElementById("reader");
         html5QrCode = new Html5Qrcode("reader");
         html5QrCode
           .start(
@@ -277,10 +317,15 @@
             { fps: 10, qrbox: 250 },
             (decodedText) => {
               document.getElementById("scanResult").textContent = decodedText;
-              html5QrCode.stop().catch(console.error);
+              saveScanToHistory(decodedText); // 👈 Save to table
+              stopScanner();
             },
             () => {}
           )
+          .then(() => {
+            isScanning = true;
+            toggleScanBtn.textContent = "Stop Scan";
+          })
           .catch((err) => {
             document.getElementById("scanResult").textContent =
               "Camera error: " + err;
@@ -288,18 +333,22 @@
       }
 
       function stopScanner() {
-        if (html5QrCode) {
+        if (html5QrCode && isScanning) {
           html5QrCode.stop().then(() => {
-            document.getElementById("reader").innerHTML = "";
+            html5QrCode.clear();
+            isScanning = false;
+            toggleScanBtn.textContent = "Start Scan";
           });
         }
       }
 
-      const toggleBtn = document.getElementById("toggleSidebar");
-      const sidebar = document.getElementById("sidebar");
-
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("active");
+      // Toggle button behavior
+      toggleScanBtn.addEventListener("click", () => {
+        if (isScanning) {
+          stopScanner();
+        } else {
+          startScanner();
+        }
       });
 
       // Close sidebar after clicking a link on mobile
@@ -323,6 +372,67 @@
           sidebar.classList.remove("active");
         }
       });
+
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+        document.body.classList.toggle("sidebar-open");
+      });
+
+      // Also remove body class when closing via link or outside
+      sidebarLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove("active");
+            document.body.classList.remove("sidebar-open");
+          }
+        });
+      });
+
+      document.addEventListener("click", function (e) {
+        if (
+          window.innerWidth <= 768 &&
+          sidebar.classList.contains("active") &&
+          !sidebar.contains(e.target) &&
+          !toggleBtn.contains(e.target)
+        ) {
+          sidebar.classList.remove("active");
+          document.body.classList.remove("sidebar-open");
+        }
+      });
+
+      function saveScanToHistory(data) {
+        const timestamp = new Date().toLocaleString();
+        const scanHistory = JSON.parse(
+          localStorage.getItem("scanHistory") || "[]"
+        );
+
+        scanHistory.unshift({ timestamp, data }); // latest on top
+        localStorage.setItem("scanHistory", JSON.stringify(scanHistory));
+
+        updateScanHistoryTable();
+      }
+
+      function updateScanHistoryTable() {
+        const tableBody = document.querySelector("#scanHistoryTable tbody");
+        tableBody.innerHTML = ""; // clear table
+
+        const scanHistory = JSON.parse(
+          localStorage.getItem("scanHistory") || "[]"
+        );
+
+        scanHistory.forEach((entry) => {
+          const row = document.createElement("tr");
+          const timeCell = document.createElement("td");
+          const dataCell = document.createElement("td");
+
+          timeCell.textContent = entry.timestamp;
+          dataCell.textContent = entry.data;
+
+          row.appendChild(timeCell);
+          row.appendChild(dataCell);
+          tableBody.appendChild(row);
+        });
+      }
     </script>
   </body>
 </html>
