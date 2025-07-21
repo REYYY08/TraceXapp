@@ -13,6 +13,7 @@
     <header>
       <button id="toggleSidebar" class="hamburger">☰</button>
       <div class="user"><span id="userName">User</span></div>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
     </header>
 
     <div class="dashboard">
@@ -435,9 +436,37 @@ Harvest Date: ${harvest}`;
       }
       const toggleBtn = document.getElementById("toggleSidebar");
       const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
 
       toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("active"); // make sure .active shows the sidebar
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+      });
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        // Clear user data if needed
+        localStorage.clear();
+
+        // Redirect to login/index page
+        window.location.href = "index.html";
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            if (confirm("Are you sure you want to logout?")) {
+              localStorage.clear(); // clear any saved user data
+              window.location.href = "index.html"; // redirect
+            }
+          });
+        }
       });
     </script>
   </body>
