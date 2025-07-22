@@ -11,7 +11,14 @@
   </head>
   <body>
     <header>
-      <button id="toggleSidebar" class="hamburger">☰</button>
+      <button
+        id="toggleSidebar"
+        class="hamburger"
+        aria-label="Toggle sidebar"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
       <div class="user"><span id="userName">User</span></div>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </header>
@@ -21,10 +28,10 @@
       <aside class="sidebar" id="sidebar">
         <h2>TraceX</h2>
         <nav>
-          <a href="#" class="active" id="dashboardTab"
+          <a href="javascript:void(0)" class="active" id="dashboardTab"
             ><i data-lucide="layout-dashboard"></i> Dashboard</a
           >
-          <a href="#" id="scannerTab"
+          <a href="javascript:void(0)" id="scannerTab"
             ><i data-lucide="scan-line"></i> Scanner</a
           >
           <a href="#"><i data-lucide="qrcode"></i> Generate QR</a>
@@ -39,19 +46,19 @@
           <form id="userInfoForm">
             <div class="info-field">
               <label for="editName"><strong>Name:</strong></label>
-              <input type="text" id="editName" />
+              <input type="text" id="editName" required />
             </div>
             <div class="info-field">
               <label for="editEmail"><strong>Email:</strong></label>
-              <input type="email" id="editEmail" />
+              <input type="email" id="editEmail" required />
             </div>
             <div class="info-field">
               <label for="editRole"><strong>Role:</strong></label>
-              <input type="text" id="editRole" />
+              <input type="text" id="editRole" required />
             </div>
             <div class="info-field">
               <label for="editLocation"><strong>Location:</strong></label>
-              <input type="text" id="editLocation" />
+              <input type="text" id="editLocation" required />
             </div>
             <button type="submit">Save</button>
           </form>
@@ -118,6 +125,8 @@
         <button id="exportBtn">📁 Export CSV</button>
       </div>
 
+      <div id="overlay" class="overlay"></div>
+
       <!-- History Table -->
       <div class="history-table-wrapper">
         <table id="scanHistoryTable">
@@ -147,6 +156,9 @@
       const msg = document.getElementById("qrMessage");
       const downloadBtn = document.getElementById("downloadQRBtn");
       const printBtn = document.getElementById("printQRBtn");
+      const toggleBtn = document.getElementById("toggleSidebar");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
 
       const nameInput = document.getElementById("editName");
       const emailInput = document.getElementById("editEmail");
@@ -229,22 +241,15 @@
         qrList.push(qrData);
         localStorage.setItem("qrList", JSON.stringify(qrList));
 
-        const dataToEncode = `--- TraceX Farmer Profile ---
-
-Trace ID: ${traceId}
-Timestamp: ${timestamp}
-
+        const dataToEncode = `TraceX Profile:
+ID: ${traceId}
 Name: ${name}
 Email: ${email}
 Role: ${role}
 Location: ${location}
-
---- Crop Information ---
-
 Crop: ${crop}
-Planting Date: ${planting}
-Harvest Date: ${harvest}`;
-
+Plant: ${planting}
+Harvest: ${harvest}`;
         QRCode.toCanvas(canvas, dataToEncode, { width: 200 }, (error) => {
           if (error) {
             msg.textContent = "⚠ Failed to generate QR Code.";
@@ -434,9 +439,6 @@ Harvest Date: ${harvest}`;
           tableBody.appendChild(row);
         });
       }
-      const toggleBtn = document.getElementById("toggleSidebar");
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
 
       toggleBtn.addEventListener("click", () => {
         sidebar.classList.toggle("active");
@@ -446,14 +448,6 @@ Harvest Date: ${harvest}`;
       overlay.addEventListener("click", () => {
         sidebar.classList.remove("active");
         overlay.classList.remove("active");
-      });
-
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        // Clear user data if needed
-        localStorage.clear();
-
-        // Redirect to login/index page
-        window.location.href = "index.html";
       });
 
       document.addEventListener("DOMContentLoaded", () => {
